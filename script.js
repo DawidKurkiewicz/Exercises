@@ -1,16 +1,12 @@
-// var log10times = function innerName (i){
-//     i = i || 0
-//     console.log('log10times')
-//     if (i < 10) innerName(++i)
-// }
-// const log10TimesPrim = log10Times
-// log10Times = null
-// log10TimesPrim()
+const numbers = [1, 2, 3, 4, 5]
 
-const  numbers = function showNum(i) {
-    i = i || 0
-    console.log(i)
-    if (i >=1) showNum(--i)
+Array.prototype.myOwnMap = function (func) {
+    let newArray  = []
 
+    for (let i = 0; i < this.length; i++){
+        newArray.push(func(this[i], i, this))
+    }
+    return newArray
 }
-numbers(10)
+
+const result = numbers.myOwnMap((e) => 2 * e)
