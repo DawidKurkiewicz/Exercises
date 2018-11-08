@@ -1,95 +1,54 @@
-// class UserList {
-//     constructor(container, number) {
-//         this.container = container
-//         this.users = []
-//         this.render()
-//         this.number = number
-//         this.init()
-//     }
+class App {
+    constructor() {
+        this.listView = new ListView()
+        this.userView = new UserView()
+        this.notFoundView = new NotFoundView()
 
-//     init() {
-//         this.render()
-//         this.fetchUsers()
-//     }
-//     fetchUsers() {
-//         fetch(`https://randomuser.me/api/?results=${this.number}`)
-//             .then(response => response.json())
-//             .then(data => {
-//                 this.users = data.results
-//                 this.render()
-//             })
-//     }
-//     render() {
-//         this.container.innerHTML = ''
-//         const ul = document.createElement('ul')
-//         this.users.forEach((user, userIndex) => {
-//             const li = document.createElement('li')
-//             const but = document.createElement('button')
-//             but.innerText = 'remove'
-//             li.innerText = `${user.name.first} ${user.name.last}`
-//             li.addEventListener('click', () => {
-//                 alert(`${user.email}`)
-//             })
-//             but.addEventListener('click', () => {
-//                 this.users.splice(userIndex, 1)
-//                 this.render()
-//             })
-//             ul.appendChild(li)
-//             ul.appendChild(but)
-//         })
-//         this.container.appendChild(ul)
-//     }
-// }
-// const list = new UserList(document.body, 10)
-
-class UserList {
-    constructor(container, number) {
-        this.container = container
-        this.users = []
-        this.render()
-        this.number = number
-        this.init()
     }
-
-    init() {
-        this.render()
-        this.fetchUsers()
+    renderView(viewName) {
+        switch (viewName) {
+            case 'listView':
+                this.render(this.listView.render())
+                break;
+            case 'userView':
+                this.render(this.userView.render())
+                break;
+            case 'notFoundView':
+                this.render(this.notFoundView.render())
+                break;
+        }
     }
-    fetchUsers() {
-        fetch(`https://randomuser.me/api/?results=${this.number}`)
-            .then(response => response.json())
-            .then(data => {
-                this.users = data.results
-                this.render()
-            })
+    render(viewContent) {
+        document.body.innerHTML = ''
+        document.body.appendChild(viewContent)
     }
-    render() {
-        this.container.innerHTML = ''
-        const ul = document.createElement('ul')
-        this.users.forEach((user, userIndex) => {
-            const li = document.createElement('li')
-            const but = document.createElement('button')
-            but.innerText = 'remove'
-            li.innerText = `${user.name.first} ${user.name.last}`
-            li.addEventListener('click', e => this.onUserClickHandler(user))
-            but.addEventListener('click', e => this.onUserDeleteClickHandler(e, userIndex))
-
-
-            li.appendChild(but)
-            ul.appendChild(li)
-        })
-
-        this.container.appendChild(ul)
-    }
-    onUserClickHandler(user) {
-        alert(user.email)
-    }
-    onUserDeleteClickHandler(e, userIndex) {
-        e.stopPropagation()
-        this.users.splice(userIndex, 1)
-        this.render()
-    }
-
 }
-const list = new UserList(document.body, 10)
 
+class ListView {
+    render() {
+        fetch('./data/users.json')
+        .then(response => response.json())
+        .then(console.log)
+        const div = document.createElement('div')
+        div.innerText = 'ListView'
+        return div
+    }
+}
+
+
+class UserView {
+    render() {
+        const div = document.createElement('div')
+        div.innerText = 'UserView'
+        return div
+    }
+}
+class NotFoundView {
+    render() {
+        const div = document.createElement('div')
+        div.innerText = 'NotFoundView'
+        return div
+    }
+}
+const app = new App()
+app.renderView('listView')
