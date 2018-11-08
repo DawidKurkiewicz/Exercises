@@ -1,6 +1,6 @@
 [
     {
-        "uid": "qwertuiop",
+        "uid": "1234",
         "name": "mateusz",
         "lastname":"choma"
     },
@@ -12,7 +12,7 @@
     {
         "uid": "23345",
         "name": "ala",
-        "lastname":"kowalska,"
+        "lastname":"kowalska"
     }
 
 ]

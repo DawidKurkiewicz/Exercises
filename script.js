@@ -5,13 +5,16 @@ class App {
         this.notFoundView = new NotFoundView()
 
     }
-    renderView(viewName) {
+    renderView(viewName, params) {
         switch (viewName) {
             case 'listView':
-                this.render(this.listView.render())
+                this.listView.render(this.renderView.bind(this))
+                    .then(viewContent => this.render(viewContent))
                 break;
             case 'userView':
-                this.render(this.userView.render())
+                this.userView.render(params.uid)
+                    .then(viewContent => this.render(viewContent))
+                    .catch(() => this.render(this.notFoundView.render()))
                 break;
             case 'notFoundView':
                 this.render(this.notFoundView.render())
@@ -25,22 +28,38 @@ class App {
 }
 
 class ListView {
-    render() {
-        fetch('./data/users.json')
-        .then(response => response.json())
-        .then(console.log)
-        const div = document.createElement('div')
-        div.innerText = 'ListView'
-        return div
+    render(renderView) {
+        const promise = fetch('./data/users.json')
+            .then(response => response.json())
+            .then(data => {
+                const div = document.createElement('div')
+                div.innerText = 'ListView'
+                data.forEach(user => {
+                    const listDiv = document.createElement('div')
+                    listDiv.innerText = `${user.name} ${user.lastname}`
+                    listDiv.addEventListener(
+                        'click',
+                        () => renderView('userView', { uid: user.uid })
+                    )
+                    div.appendChild(listDiv)
+                })
+                return div
+            })
+        return promise
     }
 }
 
 
 class UserView {
-    render() {
-        const div = document.createElement('div')
-        div.innerText = 'UserView'
-        return div
+    render(uid) {
+        const promise = fetch(`./data/users/${uid}.json`)
+            .then(response => response.json())
+            .then(data => {
+                const div = document.createElement('div')
+                div.innerText = data.email
+                return div
+            })
+        return promise
     }
 }
 class NotFoundView {
